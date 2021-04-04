@@ -1,3 +1,6 @@
+<?php 
+?>
+
 <!DOCTYPE html>
     <html lang="fr">
     <head>
@@ -8,7 +11,13 @@
         <h1>Bienvenue sur mon minichat: laissez-moi un message !</h1>
         <p>Vous pouvez me laisser un message grace au formulaire ci-dessous : </p>
         <form action="minichat_post.php" method="POST">
-            <input type="text" name="pseudo" />
+            <?php
+                if (empty($_COOKIE['pseudo'])) {
+                    echo '<input type="text" name="pseudo" />';
+                } else {
+                    echo '<input type="text" name="pseudo" value="' . $_COOKIE['pseudo'] . '"/>';
+                }
+            ?>
             <input type="text" name="message" />
             <input type="submit" name="valider" />
         </form>
@@ -21,7 +30,7 @@
         die('Erreur :' . $e->getMessage());
     }
     
-    $req = $bdd->query('SELECT * FROM minichat ORDER BY id LIMIT 0, 10');
+    $req = $bdd->query('SELECT * FROM minichat ORDER BY id DESC LIMIT 0, 10');
     while($donnees = $req->fetch()){
         echo '<li><strong>' . $donnees['pseudo'] . ': </strong>' . $donnees['message'] . '</li>'; 
     }

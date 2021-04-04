@@ -1,4 +1,7 @@
 <?php
+    setcookie('pseudo', $_POST['pseudo'], time() + 120); 
+    
+
     try {
         $bdd = new PDO('mysql:host=localhost;dbname=minichat;chartset=utf8','root','root', array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION));
     } catch (Exception $e) {
