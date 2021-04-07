@@ -13,9 +13,9 @@
         <form action="minichat_post.php" method="POST">
             <?php
                 if (empty($_COOKIE['pseudo'])) {
-                    echo '<input type="text" name="pseudo" />';
+                    echo '<label for="pseudo">Votre pseudo : </label><br><input type="text" name="pseudo" id="pseudo"/>';
                 } else {
-                    echo '<input type="text" name="pseudo" value="' . $_COOKIE['pseudo'] . '"/>';
+                    echo 'label for="message">Votre message : </label><br><input type="text" name="pseudo" value="' . $_COOKIE['pseudo'] . '" id="message"/>';
                 }
             ?>
             <input type="text" name="message" />
@@ -30,14 +30,77 @@
         die('Erreur :' . $e->getMessage());
     }
     
-    $req = $bdd->query('SELECT * FROM minichat ORDER BY id DESC LIMIT 0, 10');
+    echo 'Vous avez demandé la page ' . $_GET['page'] ;
+
+/*     $req = $bdd->prepare('SELECT * FROM minichat ORDER BY id DESC LIMIT ?, 10');
+        if (empty($_GET['page'])) {
+            $req->execute(array(0));
+        } else {
+            $rangDepart = (($_GET['page'] - 1)*10);
+            settype($rangDepart, "integer");
+            $req->execute(array(
+                $rangDepart
+            ));
+        }
     while($donnees = $req->fetch()){
         echo '<li><strong>' . $donnees['pseudo'] . ': </strong>' . $donnees['message'] . '</li>'; 
     }
+    $req->closeCursor(); */
 
-    $req->closeCursor();
-?>
-        </body>
-        </html>
+
+
+    if (empty($_GET['page'])) {
+        $req = $bdd->query('SELECT * FROM minichat ORDER BY id DESC LIMIT 0, 10');
+
+        while($donnees = $req->fetch()){
+            echo '<li><strong>' . $donnees['pseudo'] . ': </strong>' . $donnees['message'] . '</li>'; 
+        }
+
+        $req->closeCursor();
+    } else {
+        $rangDepart = (($_GET['page'] - 1)*10);
+        settype($rangDepart, "integer");
+        $req = $bdd->prepare('SELECT * FROM minichat ORDER BY id DESC LIMIT :page, 10');
+        $req->bindParam(':page', $rangDepart, PDO::PARAM_INT);
+        $req->execute();
+
+        while($donnees = $req->fetch()){
+            echo '<li><strong>' . $donnees['pseudo'] . ': </strong>' . $donnees['message'] . '</li>'; 
+        }
+
+        $req->closeCursor();
+    }
+
+
+    $messageCount = $bdd->query('SELECT COUNT(*) AS nbMessages FROM minichat');
+    $tabNbMessages = $messageCount->fetch();
+    $nbMessages = $tabNbMessages['nbMessages'];
+    $messageCount->closeCursor();
+
+    
+    echo '<h2>Voir les anciens messages</h2>';
+    echo '<p>'. $nbMessages . ' messages disponibles.</p>';
+    ?>
+    <form action="minichat.php" method="get">
+        <label for="page">Quelle page souhaitez-vous consulter ?</label>
+        <select name="page" id="page">
+            <?php
+                
+                $numeroPage = 1;
+                while($numeroPage <= $nbMessages / 10 ) {
+                    echo '<option value="' . $numeroPage  . '">' . $numeroPage . '</ option>';
+                    $numeroPage++;
+                }
+                if ($nbMessages % 10 > 0) {
+                    echo '<option value="' . $numeroPage  . '">' . $numeroPage . '</ option>';
+                }
+            ?>
+        </select>
+        <input type="submit" name="valider" value="Valider" />
+    </form>
+    <?php
+    ?>
+    </body>
+    </html>
 <?php
 ?>
