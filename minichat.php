@@ -15,10 +15,10 @@
                 if (empty($_COOKIE['pseudo'])) {
                     echo '<label for="pseudo">Votre pseudo : </label><br><input type="text" name="pseudo" id="pseudo"/>';
                 } else {
-                    echo 'label for="message">Votre message : </label><br><input type="text" name="pseudo" value="' . $_COOKIE['pseudo'] . '" id="message"/>';
+                    echo '<label for="pseudo">Votre pseudo : </label><br><input type="text" name="pseudo" value="' . $_COOKIE['pseudo'] . '" id="pseudo"/>';
                 }
             ?>
-            <input type="text" name="message" />
+            <br><label for="message">Votre message : </label><br><input type="text" name="message" id="message" />
             <input type="submit" name="valider" />
         </form>
         <br>
@@ -29,24 +29,24 @@
     } catch(Exception $e) {
         die('Erreur :' . $e->getMessage());
     }
-    
-    echo 'Vous avez demandé la page ' . $_GET['page'] ;
+
+    // Version simplifiée du code 
 
 /*     $req = $bdd->prepare('SELECT * FROM minichat ORDER BY id DESC LIMIT ?, 10');
+    $rangDepart;
+    settype($rangDepart, "integer");
         if (empty($_GET['page'])) {
-            $req->execute(array(0));
+            $rangDepart = 0;
         } else {
             $rangDepart = (($_GET['page'] - 1)*10);
-            settype($rangDepart, "integer");
-            $req->execute(array(
-                $rangDepart
-            ));
         }
+    $req->execute(array($rangDepart));
+
     while($donnees = $req->fetch()){
         echo '<li><strong>' . $donnees['pseudo'] . ': </strong>' . $donnees['message'] . '</li>'; 
     }
-    $req->closeCursor(); */
-
+    $req->closeCursor();
+ */
 
 
     if (empty($_GET['page'])) {
