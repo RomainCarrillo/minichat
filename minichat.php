@@ -104,3 +104,13 @@
     </html>
 <?php
 ?>
+
+
+<!-- TO DO / Idées 
+Vérifier la saisie dans l'URL pour protéger $_GET
+Retirer l'input submit du second formulaire
+Proposer une pagination avec la liste des pages directement visible (ancres)
+Factoriser la $req
+
+Mettre en place un front
+-->
